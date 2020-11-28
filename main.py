@@ -1,4 +1,5 @@
 from pathlib import Path
+from pprint import pprint
 import requests
 
 
@@ -12,4 +13,17 @@ def download_image(image_url, image_path):
     )
 
 
-download_image('https://upload.wikimedia.org/wikipedia/commons/3/3f/HST-SM4.jpeg', './images/hubble.jpeg')
+def fetch_spacex_launch_by_number(flight_number):
+    spacex_url = 'https://api.spacexdata.com/v3/launches/past'
+    spacex_response = requests.get(
+        spacex_url,
+        params={"flight_number": str(flight_number)}
+    )
+    spacex_response.raise_for_status()
+    spacex_images_links = spacex_response.json()[0]["links"]["flickr_images"]
+    image_index = 1
+    for image_link in spacex_images_links:
+        filename = "./images/spacex_{0:03d}_launch_{1:03d}.jpg".format(flight_number, image_index)
+        download_image(image_link, filename)
+        image_index += 1
+

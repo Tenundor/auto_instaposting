@@ -21,9 +21,7 @@ def fetch_spacex_launch_by_number(flight_number):
     )
     spacex_response.raise_for_status()
     spacex_images_links = spacex_response.json()[0]["links"]["flickr_images"]
-    image_index = 1
-    for image_link in spacex_images_links:
+    for image_index, image_link in enumerate(spacex_images_links, start=1):
         filename = "./images/spacex_{0:03d}_launch_{1:03d}.jpg".format(flight_number, image_index)
         download_image(image_link, filename)
-        image_index += 1
 

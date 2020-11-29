@@ -45,3 +45,12 @@ def fetch_spacex_launch_by_number(flight_number):
                 download_image(image_link, filename)
     except IndexError:
         print("Flight number {} not found".format(flight_number))
+
+
+hubble_first_image_url = 'http://hubblesite.org/api/v3/image/1'
+hubble_response = requests.get(hubble_first_image_url)
+hubble_response.raise_for_status()
+hubble_response_content = hubble_response.json()
+hubble_image_files_url = hubble_response_content["image_files"]
+for image_file in hubble_image_files_url:
+    print(image_file["file_url"])

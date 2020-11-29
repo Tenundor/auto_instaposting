@@ -48,7 +48,7 @@ def fetch_spacex_launch_by_number(flight_number):
 
 
 def get_file_extension_from_url(url):
-    extension_index = url.rfind(".")
+    extension_index = url.rindex(".")
     return url[extension_index + 1:]
 
 

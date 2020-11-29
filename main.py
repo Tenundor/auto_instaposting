@@ -47,10 +47,17 @@ def fetch_spacex_launch_by_number(flight_number):
         print("Flight number {} not found".format(flight_number))
 
 
+def get_file_extension_from_url(url):
+    extension_index = url.rfind(".")
+    return url[extension_index + 1:]
+
+
 hubble_first_image_url = 'http://hubblesite.org/api/v3/image/1'
-hubble_response = requests.get(hubble_first_image_url)
+hubble_response = requests.get(hubble_first_image_url, verify=False)
 hubble_response.raise_for_status()
 hubble_response_content = hubble_response.json()
 hubble_image_files_url = hubble_response_content["image_files"]
 for image_file in hubble_image_files_url:
     print(image_file["file_url"])
+
+print(get_file_extension_from_url("http://abc.xom/api/image/mmm.pdf"))

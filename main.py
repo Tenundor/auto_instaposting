@@ -5,7 +5,7 @@ import requests
 def download_image(image_url, image_path):
     image_path = Path(image_path)
     Path(image_path.parent).mkdir(parents=True, exist_ok=True)
-    response = requests.get(image_url)
+    response = requests.get(image_url, verify=False)
     response.raise_for_status()
     image_path.write_bytes(
         response.content
@@ -52,12 +52,16 @@ def get_file_extension_from_url(url):
     return url[extension_index + 1:]
 
 
-hubble_first_image_url = 'http://hubblesite.org/api/v3/image/1'
-hubble_response = requests.get(hubble_first_image_url, verify=False)
-hubble_response.raise_for_status()
-hubble_response_content = hubble_response.json()
-hubble_image_files_url = hubble_response_content["image_files"]
-for image_file in hubble_image_files_url:
-    print(image_file["file_url"])
+def fetch_hubble_image_by_id(image_id):
+    image_id_url = 'http://hubblesite.org/api/v3/image/{}'.format(image_id)
+    hubble_response = requests.get(image_id_url)
+    hubble_response.raise_for_status()
+    hubble_response_content = hubble_response.json()
+    image_versions_urls = hubble_response_content["image_files"]
+    image_best_url = "http:{}".format(image_versions_urls[-1]["file_url"])
+    image_extension = get_file_extension_from_url(image_best_url)
+    file_name = "./images/{}.{}".format(image_id, image_extension)
+    download_image(image_best_url, file_name)
 
-print(get_file_extension_from_url("http://abc.xom/api/image/mmm.pdf"))
+
+fetch_hubble_image_by_id(200)

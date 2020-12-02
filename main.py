@@ -2,12 +2,12 @@ from pathlib import Path
 import requests
 
 
-def download_image(image_url, image_path):
-    image_path = Path(image_path)
-    Path(image_path.parent).mkdir(parents=True, exist_ok=True)
-    response = requests.get(image_url, verify=False)
+def download_file(file_url, file_path):
+    file_path = Path(file_path)
+    Path(file_path.parent).mkdir(parents=True, exist_ok=True)
+    response = requests.get(file_url, verify=False)
     response.raise_for_status()
-    image_path.write_bytes(
+    file_path.write_bytes(
         response.content
     )
 
@@ -16,15 +16,15 @@ def fetch_spacex_last_launch():
     spacex_last_launch_url = 'https://api.spacexdata.com/v3/launches/latest'
     spacex_response = requests.get(spacex_last_launch_url)
     spacex_response.raise_for_status()
-    spacex_response_content = spacex_response.json()
-    flight_number = spacex_response_content["flight_number"]
-    spacex_images_links = spacex_response_content["links"]["flickr_images"]
-    if not spacex_images_links:
+    spacex_json_content = spacex_response.json()
+    flight_number = spacex_json_content["flight_number"]
+    spacex_images_urls = spacex_json_content["links"]["flickr_images"]
+    if not spacex_images_urls:
         print("Couldn't find photos of the last launch.")
     else:
-        for image_index, image_link in enumerate(spacex_images_links, start=1):
-            filename = "./images/spacex_{0:03d}_launch_{1:03d}.jpg".format(flight_number, image_index)
-            download_image(image_link, filename)
+        for spacex_image_index, spacex_image_url in enumerate(spacex_images_urls, start=1):
+            filename = "./images/spacex_{0:03d}_launch_{1:03d}.jpg".format(flight_number, spacex_image_index)
+            download_file(spacex_image_url, filename)
 
 
 def fetch_spacex_launch_by_number(flight_number):
@@ -42,7 +42,7 @@ def fetch_spacex_launch_by_number(flight_number):
         else:
             for image_index, image_link in enumerate(spacex_images_links, start=1):
                 filename = "./images/spacex_{0:03d}_launch_{1:03d}.jpg".format(flight_number, image_index)
-                download_image(image_link, filename)
+                download_file(image_link, filename)
     except IndexError:
         print("Flight number {} not found".format(flight_number))
 
@@ -53,17 +53,17 @@ def get_file_extension_from_url(url):
 
 
 def fetch_hubble_image_by_id(image_id):
-    hubble_url = 'http://hubblesite.org/api/v3/image/{}'.format(image_id)
-    hubble_response = requests.get(hubble_url)
-    hubble_response.raise_for_status()
-    hubble_response_content = hubble_response.json()
-    image_versions_description = hubble_response_content["image_files"]
+    hubble_image_url = 'http://hubblesite.org/api/v3/image/{}'.format(image_id)
+    hubble_image_response = requests.get(hubble_image_url)
+    hubble_image_response.raise_for_status()
+    hubble_image_json_content = hubble_image_response.json()
+    image_versions_description = hubble_image_json_content["image_files"]
     image_best_url = "http:{}".format(
         image_versions_description[-1]["file_url"]
     )
-    image_extension = get_file_extension_from_url(image_best_url)
-    file_name = "./images/{}.{}".format(image_id, image_extension)
-    download_image(image_best_url, file_name)
+    image_file_extension = get_file_extension_from_url(image_best_url)
+    file_name = "./images/{}.{}".format(image_id, image_file_extension)
+    download_file(image_best_url, file_name)
 
 
 hubble_get_parameters = {

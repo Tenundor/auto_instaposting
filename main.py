@@ -18,7 +18,12 @@ def fetch_spacex_last_launch():
     flight_number = spacex_json_content["flight_number"]
     spacex_images_urls = spacex_json_content["links"]["flickr_images"]
     for spacex_image_index, spacex_image_url in enumerate(spacex_images_urls, start=1):
-        filename = "./images/spacex_{0:03d}_launch_{1:03d}.jpg".format(flight_number, spacex_image_index)
+        image_file_extension = get_file_extension_from_url(spacex_image_url)
+        filename = "./images/spacex_{0:03d}_launch_{1:03d}.{2:s}".format(
+            flight_number,
+            spacex_image_index,
+            image_file_extension,
+        )
         download_file(spacex_image_url, filename)
 
 

@@ -19,12 +19,9 @@ def fetch_spacex_last_launch():
     spacex_json_content = spacex_response.json()
     flight_number = spacex_json_content["flight_number"]
     spacex_images_urls = spacex_json_content["links"]["flickr_images"]
-    if not spacex_images_urls:
-        print("Couldn't find photos of the last launch.")
-    else:
-        for spacex_image_index, spacex_image_url in enumerate(spacex_images_urls, start=1):
-            filename = "./images/spacex_{0:03d}_launch_{1:03d}.jpg".format(flight_number, spacex_image_index)
-            download_file(spacex_image_url, filename)
+    for spacex_image_index, spacex_image_url in enumerate(spacex_images_urls, start=1):
+        filename = "./images/spacex_{0:03d}_launch_{1:03d}.jpg".format(flight_number, spacex_image_index)
+        download_file(spacex_image_url, filename)
 
 
 def fetch_spacex_launch_by_number(flight_number):

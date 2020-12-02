@@ -53,10 +53,11 @@ def get_file_extension_from_url(url):
 
 
 def fetch_hubble_image_by_id(image_id):
-    image_id_url = 'http://hubblesite.org/api/v3/image/{}'.format(image_id)
-    hubble_response = requests.get(image_id_url)
+    hubble_url = 'http://hubblesite.org/api/v3/image/{}'.format(image_id)
+    hubble_response = requests.get(hubble_url)
     hubble_response.raise_for_status()
-    image_versions_description = hubble_response.json()["image_files"]
+    hubble_response_content = hubble_response.json()
+    image_versions_description = hubble_response_content["image_files"]
     image_best_url = "http:{}".format(
         image_versions_description[-1]["file_url"]
     )

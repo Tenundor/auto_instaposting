@@ -20,7 +20,7 @@ def fetch_hubble_image_by_id(image_id):
 if __name__ == "__main__":
     hubble_get_parameters = {
         "page": "all",
-        "collection_name": "wallpaper",
+        "collection_name": "spacecraft",
     }
     hubble_url = "http://hubblesite.org/api/v3/images"
     response_hubble_images_collection = requests.get(

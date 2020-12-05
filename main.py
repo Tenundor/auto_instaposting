@@ -1,14 +1,7 @@
+from download_file import download_file
 from pathlib import Path
 from PIL import Image
 import requests
-
-
-def download_file(file_url, file_path):
-    file_path = Path(file_path)
-    Path(file_path.parent).mkdir(parents=True, exist_ok=True)
-    response = requests.get(file_url, verify=False)
-    response.raise_for_status()
-    file_path.write_bytes(response.content)
 
 
 def fetch_spacex_last_launch():

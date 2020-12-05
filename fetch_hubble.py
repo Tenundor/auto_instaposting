@@ -13,7 +13,7 @@ def fetch_hubble_image_by_id(image_id):
         image_versions_description[-1]["file_url"]
     )
     image_file_extension = get_file_extension_from_url(image_best_url)
-    file_name = "./images/{}.{}".format(image_id, image_file_extension)
+    file_name = "./images/hubble_photo_{}.{}".format(image_id, image_file_extension)
     download_file(image_best_url, file_name)
 
 

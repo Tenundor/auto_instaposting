@@ -4,7 +4,7 @@ import requests
 
 
 def fetch_spacex_last_launch():
-    spacex_last_launch_url = 'https://api.spacexdata.com/v3/launches/latest'
+    spacex_last_launch_url = "https://api.spacexdata.com/v3/launches/latest"
     spacex_response = requests.get(spacex_last_launch_url)
     spacex_response.raise_for_status()
     spacex_json_content = spacex_response.json()
@@ -20,5 +20,5 @@ def fetch_spacex_last_launch():
         download_file(spacex_image_url, filename)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     fetch_spacex_last_launch()

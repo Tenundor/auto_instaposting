@@ -36,8 +36,6 @@ def fetch_hubble_image_by_id(image_id):
     download_file(image_best_url, file_name)
 
 
-fetch_spacex_last_launch()
-
 hubble_get_parameters = {
     "page": "all",
     "collection_name": "wallpaper",

@@ -26,10 +26,14 @@ if __name__ == "__main__":
     parser.add_argument("u", help="Имя пользователя")
     parser.add_argument("p", help="Пароль")
     args = parser.parse_args()
+
     images_dir = Path("images")
-    processed_images_dir = images_dir.joinpath("./processed")
+    processed_images_dir = images_dir
     processed_images_dir.mkdir(parents=True, exist_ok=True)
     for image_path in images_dir.glob("*.*"):
+        if image_path.match("*.REMOVE_ME"):
+            print("Remove_ME")
+            continue
         new_image_path = processed_images_dir.joinpath(
             "./{}.jpg".format(image_path.stem)
         )
@@ -46,6 +50,8 @@ if __name__ == "__main__":
         posted_pic_list = []
 
     print(posted_pic_list)
+    posted_pic_list = [Path(x) for x in posted_pic_list]
+    print(posted_pic_list)
 
     timeout = 20  # pics will be posted every 20 seconds
 
@@ -57,7 +63,7 @@ if __name__ == "__main__":
         pics = sorted(pics)
         try:
             for pic in pics:
-                if pic_string in posted_pic_list:
+                if pic in posted_pic_list:
                     continue
 
                 pic_name = Path(pic).stem
@@ -69,10 +75,10 @@ if __name__ == "__main__":
                     print(bot.api.last_response)
                     break
 
-                if pic_string not in posted_pic_list:
-                    posted_pic_list.append(pic_string)
+                if pic not in posted_pic_list:
+                    posted_pic_list.append(pic)
                     with open("pics.txt", "a", encoding="utf8") as f:
-                        f.write(pic_string + "\n")
+                        f.write(str(pic) + "\n")
 
                 time.sleep(timeout)
 

@@ -1,4 +1,5 @@
 from download_file import download_file
+from get_extension import get_file_extension_from_url
 from pathlib import Path
 from PIL import Image
 import requests
@@ -19,11 +20,6 @@ def fetch_spacex_last_launch():
             image_file_extension,
         )
         download_file(spacex_image_url, filename)
-
-
-def get_file_extension_from_url(url):
-    extension_index = url.rindex(".")
-    return url[extension_index + 1:]
 
 
 def fetch_hubble_image_by_id(image_id):

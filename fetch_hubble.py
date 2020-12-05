@@ -3,7 +3,7 @@ from get_extension import get_file_extension_from_url
 import requests
 
 
-def fetch_hubble_image_by_id(image_id):
+def fetch_hubble_image_by_id(image_id, image_name):
     hubble_image_url = "http://hubblesite.org/api/v3/image/{}".format(image_id)
     hubble_image_response = requests.get(hubble_image_url)
     hubble_image_response.raise_for_status()
@@ -13,14 +13,14 @@ def fetch_hubble_image_by_id(image_id):
         image_versions_description[-1]["file_url"]
     )
     image_file_extension = get_file_extension_from_url(image_best_url)
-    file_name = "./images/hubble_photo_{}.{}".format(image_id, image_file_extension)
+    file_name = "./images/{}.{}".format(image_name, image_file_extension)
     download_file(image_best_url, file_name)
 
 
 if __name__ == "__main__":
     hubble_get_parameters = {
         "page": "all",
-        "collection_name": "spacecraft",
+        "collection_name": "printshop",
     }
     hubble_url = "http://hubblesite.org/api/v3/images"
     response_hubble_images_collection = requests.get(
@@ -32,5 +32,6 @@ if __name__ == "__main__":
     amount_images = len(hubble_images_collection)
     for image_index, hubble_image_description in enumerate(hubble_images_collection, 1):
         image_id = hubble_image_description["id"]
-        fetch_hubble_image_by_id(image_id)
+        image_name = hubble_image_description["name"]
+        fetch_hubble_image_by_id(image_id, image_name)
         print("Downloaded", image_index, "images of", amount_images)

@@ -56,7 +56,7 @@ if __name__ == "__main__":
 
                 print("upload: " + image_name)
 
-                bot.upload_photo(image, caption=image_name.replace("-", " "))
+                bot.upload_photo(image, caption=image_name)
                 if bot.api.last_response.status_code != 200:
                     print(bot.api.last_response)
                     break

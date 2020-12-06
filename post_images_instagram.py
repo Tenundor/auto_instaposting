@@ -1,22 +1,9 @@
 import argparse
-import glob
-import sys
-import os
-import time
+from instabot import Bot
 from io import open
 from pathlib import Path
 from PIL import Image
-# sys.path.append(os.path.join(sys.path[0], "../../"))
-from instabot import Bot
-
-
-def prepare_image_for_instagram(original_image_path, processed_image_path):
-    max_image_resolution = (1080, 1080)
-    with Image.open(original_image_path) as sample:
-        sample.thumbnail(max_image_resolution)
-        if sample.mode == "RGBA":
-            sample = sample.convert("RGB")
-        sample.save(processed_image_path)
+import time
 
 
 if __name__ == "__main__":
@@ -28,57 +15,56 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     images_dir = Path("images")
-    processed_images_dir = images_dir
-    processed_images_dir.mkdir(parents=True, exist_ok=True)
     for image_path in images_dir.glob("*.*"):
         if image_path.match("*.REMOVE_ME"):
-            print("Remove_ME")
             continue
-        new_image_path = processed_images_dir.joinpath(
-            "./{}.jpg".format(image_path.stem)
-        )
-        prepare_image_for_instagram(
-            image_path,
-            new_image_path,
-        )
+        if image_path.match("*.jpg"):
+            new_image_path = image_path
+        else:
+            new_image_name = "{}.jpg".format(image_path.stem)
+            new_image_path = images_dir / new_image_name
+        max_image_resolution = (1080, 1080)
+        with Image.open(image_path) as sample:
+            sample.thumbnail(max_image_resolution)
+            if sample.mode == "RGBA":
+                sample = sample.convert("RGB")
+            sample.save(new_image_path)
 
-    posted_pic_list = []
+    posted_images_list = []
     try:
-        with open("pics.txt", "r", encoding="utf8") as f:
-            posted_pic_list = f.read().splitlines()
+        with open("images.txt", "r", encoding="utf8") as f:
+            posted_images_list = [
+                Path(x) for x in f.read().splitlines()
+            ]
     except Exception:
-        posted_pic_list = []
+        posted_images_list = []
 
-    print(posted_pic_list)
-    posted_pic_list = [Path(x) for x in posted_pic_list]
-    print(posted_pic_list)
-
-    timeout = 20  # pics will be posted every 20 seconds
+    timeout = 10  # pics will be posted every 10 seconds
 
     bot = Bot()
     bot.login(username=args.u, password=args.p)
 
     while True:
-        pics = processed_images_dir.glob("*.jpg")
-        pics = sorted(pics)
+        images = images_dir.glob("*.jpg")
+        images = sorted(images)
         try:
-            for pic in pics:
-                if pic in posted_pic_list:
+            for image in images:
+                if image in posted_images_list:
                     continue
 
-                pic_name = Path(pic).stem
+                image_name = Path(image).stem
 
-                print("upload: " + pic_name)
+                print("upload: " + image_name)
 
-                bot.upload_photo(pic, caption=pic_name.replace("-", " "))
+                bot.upload_photo(image, caption=image_name.replace("-", " "))
                 if bot.api.last_response.status_code != 200:
                     print(bot.api.last_response)
                     break
 
-                if pic not in posted_pic_list:
-                    posted_pic_list.append(pic)
-                    with open("pics.txt", "a", encoding="utf8") as f:
-                        f.write(str(pic) + "\n")
+                if image not in posted_images_list:
+                    posted_images_list.append(image)
+                    with open("images.txt", "a", encoding="utf8") as f:
+                        f.write(str(image) + "\n")
 
                 time.sleep(timeout)
 

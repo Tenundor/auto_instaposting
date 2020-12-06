@@ -1,5 +1,6 @@
 from download_file import download_file
 from get_extension import get_file_extension_from_url
+import re
 import requests
 
 
@@ -13,6 +14,7 @@ def fetch_hubble_image_by_id(image_id, image_name):
         image_versions_description[-1]["file_url"]
     )
     image_file_extension = get_file_extension_from_url(image_best_url)
+    image_name = re.sub(r"[^\w\s-()]", "", image_name).strip()
     file_name = "./images/{}.{}".format(image_name, image_file_extension)
     download_file(image_best_url, file_name)
 

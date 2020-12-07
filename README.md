@@ -32,4 +32,5 @@ python fetch_hubble.py
 ``` shell script
 python post_images_instagram.py username password
 ```
-
+## Цель проекта
+Код написан в образовательных целях на онлайн-курсе для веб-разработчиков [dvmn.org](dvmn.org).

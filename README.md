@@ -16,7 +16,7 @@ pip install -r requirements.txt
 
 ## Скачивание фотографий
 
-Для скачивания фотографий последнего запуска [SpaceX](https://www.spacex.com/) запустите `fetch_spacex.py':
+Для скачивания фотографий последнего запуска [SpaceX](https://www.spacex.com/) запустите `fetch_spacex.py`:
 ``` shell script
 python fetch_spacex.py
 ```

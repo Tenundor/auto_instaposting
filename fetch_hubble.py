@@ -4,7 +4,7 @@ import re
 import requests
 
 
-def fetch_hubble_image_by_id(image_id, image_name):
+def fetch_hubble_image_by_id(image_id):
     hubble_image_url = "http://hubblesite.org/api/v3/image/{}".format(image_id)
     hubble_image_response = requests.get(hubble_image_url)
     hubble_image_response.raise_for_status()
@@ -14,7 +14,8 @@ def fetch_hubble_image_by_id(image_id, image_name):
         image_versions_description[-1]["file_url"]
     )
     image_file_extension = get_file_extension_from_url(image_best_url)
-    image_name = re.sub(r"[^\w\s\-\)\(]", "", image_name).strip()
+    image_name = hubble_image_json_content["name"]
+    image_name = re.sub(r"[^\w\s\-\(\)]", "", image_name).strip()
     file_name = "./images/{}.{}".format(image_name, image_file_extension)
     download_file(image_best_url, file_name)
 
@@ -34,6 +35,5 @@ if __name__ == "__main__":
     amount_images = len(hubble_images_collection)
     for image_index, hubble_image_description in enumerate(hubble_images_collection, 1):
         image_id = hubble_image_description["id"]
-        image_name = hubble_image_description["name"]
-        fetch_hubble_image_by_id(image_id, image_name)
+        fetch_hubble_image_by_id(image_id)
         print("Downloaded", image_index, "images of", amount_images)

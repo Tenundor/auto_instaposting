@@ -41,7 +41,7 @@ if __name__ == "__main__":
 
     timeout = 10  # pics will be posted every 10 seconds
 
-    bot = Bot()
+    bot = Bot()  # Оформи как отдельную функцию (пользователь, пароль, директория с фотографиями, таймаут, posted_images list
     bot.login(username=args.u, password=args.p)
 
     while True:

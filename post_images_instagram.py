@@ -42,8 +42,8 @@ if __name__ == "__main__":
     timeout = 10  # pics will be posted every 10 seconds
 
     bot = Bot()  # Оформи как отдельную функцию (пользователь, пароль, директория с фотографиями, таймаут, posted_images list
-    bot.login(username=args.u, password=args.p)
-
+    bot.login(username=args.u, password=args.p)  # Отдели ввод-вывод от обработки. Можно сделать return список файлов
+# Которые нужно занести в текстовый документ
     while True:
         images = images_dir.glob("*.jpg")
         images = sorted(images)

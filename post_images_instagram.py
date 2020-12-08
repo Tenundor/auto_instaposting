@@ -18,14 +18,14 @@ if __name__ == "__main__":
     for image_path in images_dir.glob("*.*"):
         if image_path.match("*.REMOVE_ME"):
             continue
-        if image_path.match("*.jpg"):
+        if image_path.match("*.jpg"):  # Change_file_extension_in_path_to_jpg
             new_image_path = image_path
         else:
             new_image_name = "{}.jpg".format(image_path.stem)
-            new_image_path = images_dir / new_image_name
+            new_image_path = image_path.parent / new_image_name  # End of function
         max_image_resolution = (1080, 1080)
         with Image.open(image_path) as sample:
-            sample.thumbnail(max_image_resolution)
+            sample.thumbnail(max_image_resolution)  # prepare image for instagram
             if sample.mode == "RGBA":
                 sample = sample.convert("RGB")
             sample.save(new_image_path)
@@ -62,7 +62,7 @@ if __name__ == "__main__":
                     break
 
                 if image not in posted_images_list:
-                    posted_images_list.append(image)
+                    posted_images_list.append(image)  # add image to posted images list
                     with open("images.txt", "a", encoding="utf8") as f:
                         f.write(str(image) + "\n")
 

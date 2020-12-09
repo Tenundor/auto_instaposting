@@ -6,6 +6,22 @@ from PIL import Image
 import time
 
 
+def change_file_extension_in_path(file_path, file_extension):
+    if file_path.match("*.{}".format(file_extension)):
+        return file_path
+    else:
+        new_file_name = "{}.{}".format(file_path.stem, file_extension)
+        return file_path.parent / new_file_name
+
+
+def prepare_image_for_instagram(image_sample):
+    max_image_resolution = (1080, 1080)
+    resized_image = image_sample.copy().thumbnail(max_image_resolution)
+    if resized_image.mode == "RGBA":
+        resized_image = resized_image.convert("RGB")
+    return resized_image
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Скрипт публикует фотографии в заданном инстаграм-аккаунте"
@@ -18,16 +34,9 @@ if __name__ == "__main__":
     for image_path in images_dir.glob("*.*"):
         if image_path.match("*.REMOVE_ME"):
             continue
-        if image_path.match("*.jpg"):  # Change_file_extension_in_path_to_jpg
-            new_image_path = image_path
-        else:
-            new_image_name = "{}.jpg".format(image_path.stem)
-            new_image_path = image_path.parent / new_image_name  # End of function
-        max_image_resolution = (1080, 1080)
+        new_image_path = change_file_extension_in_path(image_path, "jpg")
         with Image.open(image_path) as sample:
-            sample.thumbnail(max_image_resolution)  # prepare image for instagram
-            if sample.mode == "RGBA":
-                sample = sample.convert("RGB")
+            sample = prepare_image_for_instagram(sample)
             sample.save(new_image_path)
 
     posted_images_list = []

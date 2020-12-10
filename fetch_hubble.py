@@ -1,5 +1,5 @@
 from download_file import download_file
-from get_extension import get_file_extension_from_url
+import os
 import re
 import requests
 
@@ -13,10 +13,10 @@ def fetch_hubble_image_by_id(image_id):
     image_best_url = "http:{}".format(
         image_versions_description[-1]["file_url"]
     )
-    image_file_extension = get_file_extension_from_url(image_best_url)
+    image_file_extension = os.path.splitext(image_best_url)[1]
     image_name = hubble_image_json_content["name"]
     image_name = re.sub(r"[^\w\s\-\(\)]", "", image_name).strip()
-    file_name = "./images/{}.{}".format(image_name, image_file_extension)
+    file_name = "./images/{}{}".format(image_name, image_file_extension)
     download_file(image_best_url, file_name)
 
 

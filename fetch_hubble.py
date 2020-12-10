@@ -1,5 +1,6 @@
 from download_file import download_file
 import os
+from pathlib import Path
 import re
 import requests
 
@@ -16,7 +17,7 @@ def fetch_hubble_image_by_id(image_id):
     image_file_extension = os.path.splitext(image_best_url)[1]
     image_name = hubble_image_json_content["name"]
     image_name = re.sub(r"[^\w\s\-\(\)]", "", image_name).strip()
-    file_name = "./images/{}{}".format(image_name, image_file_extension)
+    file_name = Path("images") / "{}{}".format(image_name, image_file_extension)
     download_file(image_best_url, file_name)
 
 

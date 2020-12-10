@@ -45,23 +45,19 @@ if __name__ == "__main__":
         while True:
             images = images_dir.glob("*.jpg")
             images = sorted(images)
-            try:
-                for image in images:
-                    if image in posted_images_list:
-                        continue
-                    image_name = Path(image).stem
-                    print("upload: " + image_name)
-                    bot.upload_photo(image, caption=image_name)
-                    if bot.api.last_response.status_code != 200:
-                        print(bot.api.last_response)
-                    if image not in posted_images_list:
-                        posted_images_list.append(image)
-                        with open("images.txt", "a", encoding="utf8") as file:
-                            file.write(str(image) + "\n")
-                    time.sleep(timeout)
-
-            except Exception as e:
-                print(str(e))
+            for image in images:
+                if image in posted_images_list:
+                    continue
+                image_name = Path(image).stem
+                print("upload: " + image_name)
+                bot.upload_photo(image, caption=image_name)
+                if bot.api.last_response.status_code != 200:
+                    print(bot.api.last_response)
+                if image not in posted_images_list:
+                    posted_images_list.append(image)
+                    with open("images.txt", "a", encoding="utf8") as file:
+                        file.write(str(image) + "\n")
+                time.sleep(timeout)
             time.sleep(timeout)
 
 

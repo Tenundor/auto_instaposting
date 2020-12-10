@@ -15,23 +15,56 @@ def change_file_extension_in_path(file_path, file_extension):
         return file_path.parent / new_file_name
 
 
-def prepare_image_for_instagram(image_sample):
+def resize_image_for_instagram(image_sample):
     max_image_resolution = (1080, 1080)
-    resized_image = image_sample.copy().thumbnail(max_image_resolution)
-    if resized_image.mode == "RGBA":
-        resized_image = resized_image.convert("RGB")
-    return resized_image
-
-
-def read_text_file_to_list(text_file_path):
-    try:
-        with open(text_file_path, "r", encoding="utf8") as file:
-            return file.read().splitlines()
-    except Exception:
-        return []
+    image_copy = image_sample.copy()
+    image_copy.thumbnail(max_image_resolution)
+    return image_copy
 
 
 if __name__ == "__main__":
+    def read_text_file_to_list(text_file_path):
+        try:
+            with open(text_file_path, "r", encoding="utf8") as file:
+                return file.read().splitlines()
+        except Exception:
+            return []
+
+
+    def publish_images_to_instagram(
+            username,
+            password,
+            images_dir,
+            timeout,
+    ):
+        posted_images_list = read_text_file_to_list("images.txt")
+        posted_images_list = [Path(posted_image) for posted_image in posted_images_list]
+        bot = Bot()
+        bot.login(username=username, password=password)
+
+        while True:
+            images = images_dir.glob("*.jpg")
+            images = sorted(images)
+            try:
+                for image in images:
+                    if image in posted_images_list:
+                        continue
+                    image_name = Path(image).stem
+                    print("upload: " + image_name)
+                    bot.upload_photo(image, caption=image_name)
+                    if bot.api.last_response.status_code != 200:
+                        print(bot.api.last_response)
+                    if image not in posted_images_list:
+                        posted_images_list.append(image)
+                        with open("images.txt", "a", encoding="utf8") as file:
+                            file.write(str(image) + "\n")
+                    time.sleep(timeout)
+
+            except Exception as e:
+                print(str(e))
+            time.sleep(timeout)
+
+
     parser = argparse.ArgumentParser(description="Скрипт публикует фотографии в заданном инстаграм-аккаунте")
     parser.add_argument("u", help="Имя пользователя")
     parser.add_argument("p", help="Пароль")
@@ -44,33 +77,14 @@ if __name__ == "__main__":
             continue
         new_image_path = change_file_extension_in_path(image_path, "jpg")
         with Image.open(image_path) as sample:
-            sample = prepare_image_for_instagram(sample)
+            sample = resize_image_for_instagram(sample)
+            if sample.mode == "RGBA":
+                sample = sample.convert("RGB")
             sample.save(new_image_path)
 
-    posted_images_list = read_text_file_to_list("images.txt")
-    posted_images_list = [Path(posted_image) for posted_image in posted_images_list]
-    timeout = 10  # pics will be posted every 10 seconds
-    bot = Bot()
-    bot.login(username=args.u, password=args.p)
-
-    while True:
-        images = images_dir.glob("*.jpg")
-        images = sorted(images)
-        try:
-            for image in images:
-                if image in posted_images_list:
-                    continue
-                image_name = Path(image).stem
-                print("upload: " + image_name)
-                bot.upload_photo(image, caption=image_name)
-                if bot.api.last_response.status_code != 200:
-                    print(bot.api.last_response)
-                if image not in posted_images_list:
-                    posted_images_list.append(image)  # add image to posted images list
-                    with open("images.txt", "a", encoding="utf8") as f:
-                        f.write(str(image) + "\n")
-                time.sleep(timeout)
-
-        except Exception as e:
-            print(str(e))
-        time.sleep(60)
+    publish_images_to_instagram(
+        username=args.u,
+        password=args.p,
+        images_dir=images_dir,
+        timeout=10
+    )

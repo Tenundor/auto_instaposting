@@ -80,5 +80,5 @@ if __name__ == "__main__":
         username=args.u,
         password=args.p,
         images_dir=images_dir,
-        timeout=10
+        timeout=10  # Images posted every 10 seconds
     )

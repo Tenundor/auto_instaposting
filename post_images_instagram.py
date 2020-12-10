@@ -17,9 +17,9 @@ def change_file_extension_in_path(file_path, file_extension):
 
 def resize_image_for_instagram(image_sample):
     max_image_resolution = (1080, 1080)
-    image_copy = image_sample.copy()
-    image_copy.thumbnail(max_image_resolution)
-    return image_copy
+    resized_image_copy = image_sample.copy()
+    resized_image_copy.thumbnail(max_image_resolution)
+    return resized_image_copy
 
 
 if __name__ == "__main__":

@@ -21,10 +21,10 @@ def fetch_hubble_image_by_id(image_id):
     download_file(image_best_url, file_name)
 
 
-if __name__ == "__main__":
+def get_hubble_images_collection_by_name(collection_name):
     hubble_get_parameters = {
         "page": "all",
-        "collection_name": "printshop",
+        "collection_name": collection_name,
     }
     hubble_url = "http://hubblesite.org/api/v3/images"
     response_hubble_images_collection = requests.get(
@@ -32,7 +32,11 @@ if __name__ == "__main__":
         params=hubble_get_parameters,
     )
     response_hubble_images_collection.raise_for_status()
-    hubble_images_collection = response_hubble_images_collection.json()
+    return response_hubble_images_collection.json()
+
+
+if __name__ == "__main__":
+    hubble_images_collection = get_hubble_images_collection_by_name("printshop")
     amount_images = len(hubble_images_collection)
     for image_index, hubble_image_description in enumerate(hubble_images_collection, 1):
         image_id = hubble_image_description["id"]

@@ -1,5 +1,6 @@
 from download_file import download_file
 import os
+from pathlib import Path
 import requests
 
 
@@ -12,7 +13,7 @@ def fetch_spacex_last_launch():
     spacex_images_urls = spacex_json_content["links"]["flickr_images"]
     for spacex_image_index, spacex_image_url in enumerate(spacex_images_urls, start=1):
         image_file_extension = os.path.splitext(spacex_image_url)
-        filename = "./images/spacex_{0:03d}_launch_{1:03d}{2:s}".format(
+        filename = Path("images") / "spacex_{0:03d}_launch_{1:03d}{2:s}".format(
             flight_number,
             spacex_image_index,
             image_file_extension,

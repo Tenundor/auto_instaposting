@@ -36,23 +36,15 @@ def publish_images_to_instagram(
         images_dir,
         timeout,
 ):
-    posted_images_list = read_text_file_to_list("images.txt")
-    posted_images_list = [Path(posted_image) for posted_image in posted_images_list]
     bot = Bot()
     bot.login(username=username, password=password)
 
     images = images_dir.glob("*.jpg")
     images = sorted(images)
     for image in images:
-        if image in posted_images_list:
-            continue
         image_name = Path(image).stem
         print("upload: " + image_name)
         bot.upload_photo(image, caption=image_name)
-        if image not in posted_images_list:
-            posted_images_list.append(image)
-            with open("images.txt", "a", encoding="utf8") as file:
-                file.write(str(image) + "\n")
         time.sleep(timeout)
 
 

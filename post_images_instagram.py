@@ -22,14 +22,6 @@ def resize_image_for_instagram(image_sample):
     return resized_image_copy
 
 
-def read_text_file_to_list(text_file_path):
-    try:
-        with open(text_file_path, "r", encoding="utf8") as file:
-            return file.read().splitlines()
-    except Exception:
-        return []
-
-
 def publish_images_to_instagram(
         username,
         password,

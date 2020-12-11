@@ -22,8 +22,12 @@ def publish_images_to_instagram(username, password, images_dir, timeout):
     for image in images:
         image_name = Path(image).stem
         print("upload: " + image_name)
-        bot.upload_photo(image, caption=image_name, options={"rename": False})
-        time.sleep(timeout)
+        try:
+            bot.upload_photo(image, caption=image_name, options={"rename": False})
+            image.unlink()
+            time.sleep(timeout)
+        except Exception:
+            print("Photo '{}' is not uploaded.".format(image.name))
 
 
 if __name__ == "__main__":

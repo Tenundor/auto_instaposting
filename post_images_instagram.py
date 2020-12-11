@@ -53,7 +53,9 @@ if __name__ == "__main__":
             sample = resize_image_for_instagram(sample)
             if sample.mode == "RGBA":
                 sample = sample.convert("RGB")
-            sample.save(new_image_path)
+            sample.save(image_path, format="JPEG")
+        if not image_path.match("*.jpg"):
+            image_path.replace(image_path.with_suffix(".jpg"))
 
     publish_images_to_instagram(
         username=args.u,

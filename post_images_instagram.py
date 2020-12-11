@@ -1,6 +1,5 @@
 import argparse
 from instabot import Bot
-from io import open
 from pathlib import Path
 from PIL import Image
 import time

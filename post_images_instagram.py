@@ -6,15 +6,6 @@ from PIL import Image
 import time
 
 
-def change_file_extension_in_path(file_path, file_extension):
-    file_path = Path(file_path)
-    if file_path.match("*.{}".format(file_extension)):
-        return file_path
-    else:
-        new_file_name = "{}.{}".format(file_path.stem, file_extension)
-        return file_path.parent / new_file_name
-
-
 def resize_image_for_instagram(image_sample):
     max_image_resolution = (1080, 1080)
     resized_image_copy = image_sample.copy()
@@ -57,9 +48,9 @@ if __name__ == "__main__":
         if not image_path.match("*.jpg"):
             image_path.replace(image_path.with_suffix(".jpg"))
 
-    publish_images_to_instagram(
-        username=args.u,
-        password=args.p,
-        images_dir=images_dir,
-        timeout=10  # Images posted every 10 seconds
-    )
+    # publish_images_to_instagram(
+    #     username=args.u,
+    #     password=args.p,
+    #     images_dir=images_dir,
+    #     timeout=10  # Images posted every 10 seconds
+    # )

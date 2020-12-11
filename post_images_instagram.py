@@ -1,6 +1,7 @@
 import argparse
 from instabot import Bot
 from pathlib import Path
+from PIL import UnidentifiedImageError
 from PIL import Image
 import time
 
@@ -34,13 +35,18 @@ if __name__ == "__main__":
     images_dir = Path("images")
 
     for image_path in images_dir.glob("*.*"):
-        with Image.open(image_path) as sample:
-            sample = resize_image_for_instagram(sample)
-            if sample.mode == "RGBA":
-                sample = sample.convert("RGB")
-            sample.save(image_path, format="JPEG")
-        if not image_path.match("*.jpg"):
-            image_path.replace(image_path.with_suffix(".jpg"))
+        try:
+            with Image.open(image_path) as sample:
+                sample = resize_image_for_instagram(sample)
+                if sample.mode == "RGBA":
+                    sample = sample.convert("RGB")
+                sample.save(image_path, format="JPEG")
+            if not image_path.match("*.jpg"):
+                image_path.replace(image_path.with_suffix(".jpg"))
+        except UnidentifiedImageError:
+            print("Can't identify image file '{}'".format(image_path.name))
+        except Exception:
+            print("Image file '{}' can't be prepared for instagram".format(image_path.name))
 
     publish_images_to_instagram(
         username=args.u,

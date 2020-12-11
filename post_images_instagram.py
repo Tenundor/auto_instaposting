@@ -22,43 +22,43 @@ def resize_image_for_instagram(image_sample):
     return resized_image_copy
 
 
-if __name__ == "__main__":
-    def read_text_file_to_list(text_file_path):
-        try:
-            with open(text_file_path, "r", encoding="utf8") as file:
-                return file.read().splitlines()
-        except Exception:
-            return []
+def read_text_file_to_list(text_file_path):
+    try:
+        with open(text_file_path, "r", encoding="utf8") as file:
+            return file.read().splitlines()
+    except Exception:
+        return []
 
 
-    def publish_images_to_instagram(
-            username,
-            password,
-            images_dir,
-            timeout,
-    ):
-        posted_images_list = read_text_file_to_list("images.txt")
-        posted_images_list = [Path(posted_image) for posted_image in posted_images_list]
-        bot = Bot()
-        bot.login(username=username, password=password)
+def publish_images_to_instagram(
+        username,
+        password,
+        images_dir,
+        timeout,
+):
+    posted_images_list = read_text_file_to_list("images.txt")
+    posted_images_list = [Path(posted_image) for posted_image in posted_images_list]
+    bot = Bot()
+    bot.login(username=username, password=password)
 
-        while True:
-            images = images_dir.glob("*.jpg")
-            images = sorted(images)
-            for image in images:
-                if image in posted_images_list:
-                    continue
-                image_name = Path(image).stem
-                print("upload: " + image_name)
-                bot.upload_photo(image, caption=image_name)
-                if image not in posted_images_list:
-                    posted_images_list.append(image)
-                    with open("images.txt", "a", encoding="utf8") as file:
-                        file.write(str(image) + "\n")
-                time.sleep(timeout)
+    while True:
+        images = images_dir.glob("*.jpg")
+        images = sorted(images)
+        for image in images:
+            if image in posted_images_list:
+                continue
+            image_name = Path(image).stem
+            print("upload: " + image_name)
+            bot.upload_photo(image, caption=image_name)
+            if image not in posted_images_list:
+                posted_images_list.append(image)
+                with open("images.txt", "a", encoding="utf8") as file:
+                    file.write(str(image) + "\n")
             time.sleep(timeout)
+        time.sleep(timeout)
 
 
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Скрипт публикует фотографии в заданном инстаграм-аккаунте")
     parser.add_argument("u", help="Имя пользователя")
     parser.add_argument("p", help="Пароль")

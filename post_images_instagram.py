@@ -13,12 +13,7 @@ def resize_image_for_instagram(image_sample):
     return resized_image_copy
 
 
-def publish_images_to_instagram(
-        username,
-        password,
-        images_dir,
-        timeout,
-):
+def publish_images_to_instagram(username, password, images_dir, timeout):
     bot = Bot()
     bot.login(username=username, password=password)
 

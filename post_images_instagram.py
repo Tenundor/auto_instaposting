@@ -22,7 +22,7 @@ def publish_images_to_instagram(username, password, images_dir, timeout):
     for image in images:
         image_name = Path(image).stem
         print("upload: " + image_name)
-        bot.upload_photo(image, caption=image_name)
+        bot.upload_photo(image, caption=image_name, options={"rename": False})
         time.sleep(timeout)
 
 

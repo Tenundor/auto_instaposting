@@ -49,9 +49,6 @@ if __name__ == "__main__":
     images_dir = Path("images")
 
     for image_path in images_dir.glob("*.*"):
-        if image_path.match("*.REMOVE_ME"):
-            continue
-        new_image_path = change_file_extension_in_path(image_path, "jpg")
         with Image.open(image_path) as sample:
             sample = resize_image_for_instagram(sample)
             if sample.mode == "RGBA":

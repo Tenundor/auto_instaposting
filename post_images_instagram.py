@@ -24,10 +24,11 @@ def publish_images_to_instagram(username, password, images_dir, timeout):
         print("upload: " + image_name)
         try:
             bot.upload_photo(image, caption=image_name, options={"rename": False})
-            image.unlink()
             time.sleep(timeout)
         except Exception:
             print("Photo '{}' is not uploaded.".format(image.name))
+        finally:
+            image.unlink()
 
 
 if __name__ == "__main__":
